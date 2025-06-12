@@ -77,7 +77,6 @@ func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 }
 
 func (h *ProductHandler) UpdateProduct(c *gin.Context) {
-	// 1. Pegar o ID do produto dos parâmetros da URL
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
