@@ -35,3 +35,7 @@ func (r *ProductRepository) GetByID(id uint) (*domain.Product, error) {
 func (r *ProductRepository) Delete(id uint) error {
     return r.db.Delete(&domain.Product{}, id).Error
 }
+
+func (r *ProductRepository) Update(product *domain.Product) error {
+	return r.db.Save(product).Error
+}

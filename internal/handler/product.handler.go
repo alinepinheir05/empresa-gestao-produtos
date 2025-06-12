@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"net/http"
@@ -74,4 +74,43 @@ func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 		return
 	}
 	c.Status(http.StatusNoContent)
+}
+
+func (h *ProductHandler) UpdateProduct(c *gin.Context) {
+	// 1. Pegar o ID do produto dos parâmetros da URL
+	idParam := c.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
+		return
+	}
+
+	product, err := h.repo.GetByID(uint(id))
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Produto não encontrado"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar produto"})
+		return
+	}
+
+	var input domain.Product
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	product.Name = input.Name
+	product.Code = input.Code
+	product.Description = input.Description
+	product.Unit = input.Unit
+	product.CostEstimate = input.CostEstimate
+
+	if err := h.repo.Update(product); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao atualizar produto"})
+		return
+	}
+
+	c.JSON(http.StatusOK, product)
 }
