@@ -1,10 +1,17 @@
 package domain
 
 type Product struct {
-	ID           uint    `gorm:"primaryKey;autoIncrement"`
-	Name         string  `gorm:"size:100;not null"`
-	Code         string  `gorm:"size:50;unique;not null"`
-	Description  string  `gorm:"size:255"`
-	Unit         string  `gorm:"size:20"`
-	CostEstimate float64 `gorm:"type:decimal(10,2)"`
+    ID           uint    `gorm:"primaryKey" json:"id"`
+    Name         string  `json:"name"`
+    Code         string  `gorm:"unique" json:"code"`
+    Description  string  `json:"description"`
+    Unit         string  `json:"unit"`
+    CostEstimate float64 `json:"costEstimate"`
+    Weight       float64 `json:"weight"`
+    Color        string  `json:"color"`
+    Volume       float64 `json:"volume"`
+    Thickness    float64 `json:"thickness"`
+    RawMaterial  string  `json:"rawMaterial"`
+    ClientBrand  string  `json:"clientBrand"`
+    EAN          string  `json:"ean"`
 }
